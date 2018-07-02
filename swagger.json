@@ -1,0 +1,504 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "This describes the REST API for Japonic auction apps",
+      "version": "1.0.0",
+      "title": "Japonic API"
+    },
+    "host": "http://192.168.0.73:3000/api",
+    "schemes": [
+      "http"
+    ],
+    "security": [
+      {
+        "basicAuth": []
+      }
+    ],
+    "paths": {
+      "/companies?limit={limit}&page_number={page_number}": {
+        "get": {
+          "tags": [
+            "The Endpoint to get companies"
+          ],
+          "summary": "Endpoints to get companies",
+          "description": "Endpoints to get companies",
+          "operationId": "wakeup",
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "produces": [
+            "text/json"
+          ],
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "path",
+              "description": "The identifier of the limit amount of companies to load per a request",
+              "required": true,
+              "type": "number"
+            },
+            {
+              "name": "page_number",
+              "in": "path",
+              "description": "Which page to get companies in",
+              "required": true,
+              "type": "number"
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "A list of companies.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                            "$ref": "#/components/schemas/pet"
+                            }
+                        }
+                    }
+                }
+            },
+            "422": {
+              "description": "We were unable to move the tablet to image capture mode"
+            },
+            "default": {
+              "description": "Unexpected error"
+            }
+          }
+        }
+      },
+      "/models?limit={limit}&page_number={page_number}" : {
+        "get": {
+          "tags": [
+            "The Endpoint to get companies"
+          ],
+          "summary": "Endpoints to get companies",
+          "description": "Endpoints to get companies",
+          "operationId": "wakeup",
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "produces": [
+            "text/json"
+          ],
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "path",
+              "description": "The identifier of the limit amount of companies to load per a request",
+              "required": true,
+              "type": "number"
+            },
+            {
+              "name": "page_number",
+              "in": "path",
+              "description": "Which page to get companies in",
+              "required": true,
+              "type": "number"
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "A list of companies.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                            "$ref": "#/components/schemas/pet"
+                            }
+                        }
+                    }
+                }
+            },
+            "422": {
+              "description": "We were unable to move the tablet to image capture mode"
+            },
+            "default": {
+              "description": "Unexpected error"
+            }
+          }
+        }
+      },
+      "/feedback/{id}": {
+        "post": {
+          "tags": [
+            "POM endpoints accessible to bpost"
+          ],
+          "summary": "Send back fields as validated by operator",
+          "description": "The feedback endpoint is used to inform the feedback loop for continuous learning. It accepts json in the body which contains the validated fields.",
+          "operationId": "feedback",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "text/plain"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The identifier of the POM analysis",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "meta_data",
+              "in": "body",
+              "description": "validated data",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/meta_data"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Feedback correctly received"
+            },
+            "default": {
+              "description": "Unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          }
+        }
+      },
+      "/ready/{workstation}": {
+        "post": {
+          "tags": [
+            "bpost endpoints accessible by pom"
+          ],
+          "summary": "Invoice data read by pom server",
+          "description": "The ready endpoint is an endpoint by bpost that is called by the pom server when a document has been processed. It passes the payment details in json in the body",
+          "operationId": "ready",
+          "produces": [
+            "text/plain",
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "workstation",
+              "in": "path",
+              "description": "The workstation to which to direct the output of the analysis",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "meta_data",
+              "in": "body",
+              "description": "meta data retrieved from the invoice",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/meta_data"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Information correctly received"
+            },
+            "default": {
+              "description": "Unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          }
+        }
+      },
+      "/storeImage/{id}": {
+        "put": {
+          "tags": [
+            "bpost endpoints accessible by pom"
+          ],
+          "summary": "Invoice data read by pom server",
+          "description": "The storeImage endpoint is meant to accept the image and store it for future reference (based on id)",
+          "operationId": "storeImage",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The identifier of the POM analysis",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "file",
+              "in": "formData",
+              "description": "The image to be analysed",
+              "required": false,
+              "type": "file"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Image stored successfully"
+            },
+            "default": {
+              "description": "Unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          }
+        }
+      },
+      "/abort/{workstation}": {
+        "post": {
+          "tags": [
+            "bpost endpoints accessible by pom"
+          ],
+          "summary": "Inform bpost that invoice analysis has been cancelled",
+          "description": "The abort endpoint is called when a user chooses to abort the invoice analysis",
+          "operationId": "abort",
+          "produces": [
+            "text/plain"
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "parameters": [
+            {
+              "name": "workstation",
+              "in": "path",
+              "description": "The workstation to which this iPad is linked",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The identifier of the POM analysis",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "event",
+              "in": "formData",
+              "description": "The event that initiated the abort",
+              "required": true,
+              "type": "string",
+              "enum": [
+                "user initiated", "server error", "other"
+              ]
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Abort correctly registered"
+            },
+            "default": {
+              "description": "Unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          }
+        }
+      },
+      "/upload/{workstation}": {
+        "post": {
+          "tags": [
+            "POM internal (from tablet to server)"
+          ],
+          "summary": "Upload an image to the pom API",
+          "description": "The upload endpoint will accept an image (.png, .jpeg) sent by the tablet for analysis",
+          "produces": [
+            "text/html"
+          ],
+          "operationId": "upload",
+          "parameters": [
+            {
+              "name": "workstation",
+              "in": "path",
+              "description": "The workstation to which this iPad is linked",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "file",
+              "in": "formData",
+              "description": "The image to be analysed",
+              "required": true,
+              "type": "file"
+            },
+            {
+              "name": "service",
+              "in": "formData",
+              "description": "Which service (for future extension)",
+              "required": true,
+              "type": "string",
+              "enum": [
+                "invoice"
+              ]
+            }
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "responses": {
+            "200": {
+              "description": "Image received properly for known workstation"
+            },
+            "default": {
+              "description": "Unexpected error"
+            }
+          }
+        }
+      },
+      "/list_tablet_names": {
+        "get": {
+          "tags": [
+            "POM internal (from tablet to server)"
+          ],
+          "summary": "List of connected tablets",
+          "description": "This endpoint returns the list of connected workstations",
+          "operationId": "list",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "default": {
+              "description": "Unexpected error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securityDefinitions": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "API Certificate"
+      }
+    },
+    "definitions": {
+      "meta_data": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount to be paid"
+          },
+          "communication": {
+            "type": "string",
+            "description": "The communication for the payment"
+          },
+          "beneficiary": {
+            "type": "object",
+            "properties": {
+              "IBAN": {
+                "type": "string",
+                "description": "The IBAN number"
+              },
+              "Name": {
+                "type": "string",
+                "description": "The name of the beneficiary"
+              },
+              "Address": {
+                "type": "object",
+                "properties": {
+                  "Street": {
+                    "type": "string",
+                    "description": "The street"
+                  },
+                  "Number": {
+                    "type": "string",
+                    "description": "The street number"
+                  },
+                  "Zip": {
+                    "type": "string",
+                    "description": "The zip code"
+                  },
+                  "Country": {
+                    "type": "string",
+                    "description": "The country"
+                  }
+                }
+              }
+            }
+          },
+          "payer": {
+            "type": "object",
+            "properties": {
+              "Name": {
+                "type": "string",
+                "description": "The name of the beneficiary"
+              },
+              "Address": {
+                "type": "object",
+                "properties": {
+                  "Street": {
+                    "type": "string",
+                    "description": "The street"
+                  },
+                  "Number": {
+                    "type": "string",
+                    "description": "The street number"
+                  },
+                  "Zip": {
+                    "type": "string",
+                    "description": "The zip code"
+                  },
+                  "Country": {
+                    "type": "string",
+                    "description": "The country"
+                  }
+                }
+              }
+            }
+          },
+          "pom_id": {
+            "type": "string",
+            "description": "the unique identifier by POM"
+          },
+          "flag_for_review": {
+            "type": "boolean",
+            "description": "indicates whether the operator should be asked to review this document"
+          },
+          "stage": {
+            "type": "string",
+            "description": "the stage at which this information is sent - \"predicted\" means as produced by the server, \"reviewed\" means as reviewed by the operator, \"paid\" means as submitted for payment",
+            "enum": [
+              "predicted",
+              "reviewed",
+              "paid"
+            ]
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
